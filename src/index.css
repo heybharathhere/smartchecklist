@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Theme tokens ----------
+   Light is a cool pale steel rather than cream; dark is deep navy.
+   Colour meaning is fixed across themes: copper = action, teal = progress. */
+:root {
+  --c-ink: 237 241 247;
+  --c-raised: 255 255 255;
+  --c-surface: 255 255 255;
+  --c-hairline: 208 216 228;
+  --c-text: 22 32 51;
+  --c-muted: 98 113 137;
+  --c-accent: 176 105 22;
+  --c-accent-soft: 246 235 219;
+  --c-progress: 13 138 126;
+  --c-critical: 197 48 48;
+  --c-high: 176 105 22;
+  --c-medium: 37 99 195;
+  --c-low: 98 113 137;
+  --c-shadow: 24 39 66;
+  --glass: 255 255 255;
+  --glass-alpha: 0.72;
+  --sheen: 0;
+  color-scheme: light;
+}
+
+.dark {
+  --c-ink: 10 16 32;
+  --c-raised: 16 26 46;
+  --c-surface: 22 35 59;
+  --c-hairline: 36 52 79;
+  --c-text: 232 230 223;
+  --c-muted: 148 163 186;
+  --c-accent: 232 163 61;
+  --c-accent-soft: 46 37 22;
+  --c-progress: 79 209 197;
+  --c-critical: 242 99 95;
+  --c-high: 232 163 61;
+  --c-medium: 107 168 245;
+  --c-low: 124 138 163;
+  --c-shadow: 2 6 16;
+  --glass: 26 40 66;
+  --glass-alpha: 0.6;
+  --sheen: 0.045;
+  color-scheme: dark;
+}
+
+/* High contrast strips glass and raises edge definition */
+.hc {
+  --glass-alpha: 1;
+  --sheen: 0;
+}
+.hc:not(.dark) {
+  --c-ink: 255 255 255;
+  --c-raised: 255 255 255;
+  --c-surface: 255 255 255;
+  --c-hairline: 20 20 20;
+  --c-text: 0 0 0;
+  --c-muted: 47 47 47;
+  --c-accent: 133 70 0;
+  --c-progress: 0 90 82;
+  --glass: 255 255 255;
+}
+.hc.dark {
+  --c-ink: 0 0 0;
+  --c-raised: 9 9 12;
+  --c-surface: 12 12 16;
+  --c-hairline: 235 235 235;
+  --c-text: 255 255 255;
+  --c-muted: 226 226 226;
+  --c-accent: 255 197 102;
+  --c-progress: 122 240 226;
+  --glass: 12 12 16;
+}
+
+@layer base {
+  * {
+    border-color: rgb(var(--c-hairline));
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-ink text-limestone font-sans antialiased;
+    font-feature-settings: 'cv05' 1, 'ss03' 1;
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-[-0.015em];
+  }
+  /* Numerals line up in tables and stat cards */
+  .tabular, td, th, time {
+    font-variant-numeric: tabular-nums;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-copper ring-offset-2;
+    --tw-ring-offset-color: rgb(var(--c-ink));
+  }
+  ::selection {
+    background: rgb(var(--c-accent) / 0.28);
+  }
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'] {
+    color-scheme: inherit;
+  }
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-muted) / 0.32);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--c-muted) / 0.55);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgb(var(--glass) / var(--glass-alpha));
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+  .panel {
+    @apply glass rounded-card border shadow-raise;
+  }
+  .hairline-grid {
+    background-image: linear-gradient(rgb(var(--c-hairline) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-hairline) / 0.5) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .skeleton {
+    @apply relative overflow-hidden rounded-control bg-steel/10;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgb(var(--c-muted) / 0.16), transparent);
+    animation: shimmer 1.4s infinite;
+    transform: translateX(-100%);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Motion is opt-out at the OS level and in Settings */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

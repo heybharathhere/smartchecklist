@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Smart Checklist</title>
+    <meta
+      name="description"
+      content="An offline-first checklist and task manager. Everything is stored on your own device."
+    />
+    <meta name="theme-color" content="#0A1020" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Checklist" />
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <script>
+      // Paint in the right theme before React mounts, so there is no flash.
+      (function () {
+        try {
+          var raw = localStorage.getItem('smart-checklist:prefs');
+          var state = raw ? JSON.parse(raw).state || {} : {};
+          var theme = state.theme || 'system';
+          var dark =
+            theme === 'dark' ||
+            (theme === 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          if (dark) root.classList.add('dark');
+          if (state.highContrast) root.classList.add('hc');
+          if (state.reduceMotion) root.classList.add('reduce-motion');
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', dark ? '#0A1020' : '#EDF1F7');
+        } catch (error) {
+          /* first run, or storage blocked */
+        }
+      })();
+    </script>
+    <style>
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+      body {
+        margin: 0;
+        background: #edf1f7;
+      }
+      html.dark body {
+        background: #0a1020;
+      }
+      #boot {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        font:
+          500 14px/1.4 Inter,
+          system-ui,
+          sans-serif;
+        color: #627189;
+      }
+      html.dark #boot {
+        color: #94a3ba;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="boot">Loading Smart Checklist…</div>
+    </div>
+    <noscript>
+      <p style="padding: 2rem; font-family: system-ui">
+        Smart Checklist needs JavaScript. Everything runs in your browser, so there is no server to
+        fall back to.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
