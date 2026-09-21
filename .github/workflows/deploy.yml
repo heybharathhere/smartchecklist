@@ -1,4 +1,4 @@
-ame: Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -21,10 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No `cache: npm` here on purpose: that option fails the job outright
+      # when the repo has no package-lock.json, which this one does not.
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
